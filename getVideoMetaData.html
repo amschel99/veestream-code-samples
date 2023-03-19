@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video Data</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      th, td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      tr:hover {background-color: #f5f5f5;}
+    </style>
+  </head>
+  <body>
+    <h1>Video Data</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Poster</th>
+          <th>GIF</th>
+        </tr>
+      </thead>
+      <tbody id="video-data"></tbody>
+    </table>
+
+    <script>
+      const videoData = document.querySelector('#video-data');
+
+      const apiKey = '59959534HX078772Rae8569f7c8bc5fafb6d7e0286b396bcc83551de4';
+
+      fetch('http://veestream.tech/video/6411586553934d5529ea3ced/data', {
+        headers: {
+          apikey: apiKey,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const row = document.createElement('tr');
+
+          const idCell = document.createElement('td');
+          idCell.textContent = data._id;
+          row.appendChild(idCell);
+
+          const nameCell = document.createElement('td');
+          nameCell.textContent = data.name;
+          row.appendChild(nameCell);
+
+          const posterCell = document.createElement('td');
+          const posterUrl = `http://veestream.tech${data.poster}`;
+          fetch(posterUrl, {
+            headers: {
+              apikey: apiKey,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.blob();
+            })
+            .then((blob) => {
+              const posterImg = document.createElement('img');
+             
+              posterImg.src = URL.createObjectURL(blob);
+              posterCell.appendChild(posterImg);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              posterCell.textContent = 'An error occurred: ' + error.message;
+            });
+          row.appendChild(posterCell);
+
+          const gifCell = document.createElement('td');
+          const gifUrl = `http://veestream.tech${data.gif}`;
+          fetch(gifUrl, {
+            headers: {
+              apikey: apiKey,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.blob();
+            })
+            .then((blob) => {
+              const gifImg = document.createElement('img');
+              
+              gifImg.src = URL.createObjectURL(blob);
+              gifCell.appendChild(gifImg);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+              gifCell.textContent = 'An error occurred: ' + error.message;
+            });
+          row.appendChild(gifCell);
+
+          videoData.appendChild(row);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          videoData.textContent = 'An error occurred: ' + error.message;
+        });
+    </script>
+  </body>
+</html>
