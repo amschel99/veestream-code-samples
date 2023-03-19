@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Video List</title>
+  </head>
+  <body>
+    <h1>Video List</h1>
+    <ul id="videos-list"></ul>
+
+    <script>
+      const apiUrl = 'http://veestream.tech/videos';
+      const apiKey = '59959534HX078772Rae8569f7c8bc5fafb6d7e0286b396bcc83551de4';
+
+      const ul = document.querySelector('#videos-list');
+
+      fetch(apiUrl, {
+        headers: {
+          'apikey': apiKey
+        }
+      })
+      .then(response => response.json())
+      .then(videos => {
+        videos.forEach(video => {
+          const li = document.createElement('li');
+          const gifUrl = document.createElement('p');
+          gifUrl.textContent = `GIF URL: ${video.gif}`;
+          const name = document.createElement('h3');
+          name.textContent = video.name;
+          const posterUrl = document.createElement('p');
+          posterUrl.textContent = `Poster URL: ${video.poster}`;
+          const videoUrl = document.createElement('p');
+          videoUrl.textContent = `Video URL: ${video.url}`;
+          li.appendChild(name);
+          li.appendChild(gifUrl);
+          li.appendChild(posterUrl);
+          li.appendChild(videoUrl);
+          ul.appendChild(li);
+        });
+      })
+      .catch(error => console.error(error));
+    </script>
+  </body>
+</html>
