@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Play Video</title>
+</head>
+<body>
+	<video width="300px" height="400px" controls>
+		<source src="" type="video/mp4">
+	</video>
+	<script>
+		const videoPlayer = document.querySelector('video');
+		const apiKey = '59959534HX078772Rae8569f7c8bc5fafb6d7e0286b396bcc83551de4';// this is just a test api key, use your api key here
+		const videoId = '64140be67d6d62808d07affc';
+		const apiUrl = `http://veestream.tech/video/${videoId}`;
+		
+		fetch(apiUrl, { headers: { apikey: apiKey } })
+			.then(response => response.json())
+			.then(videoUrl => {
+				videoPlayer.src = videoUrl;
+				videoPlayer.play();
+			})
+			.catch(error => console.error(error));
+	</script>
+</body>
+</html>
