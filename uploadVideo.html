@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Video Upload</title>
+  </head>
+  <body>
+    <h1>Video Upload</h1>
+    <form>
+      <label for="video-input">Choose a video to upload:</label>
+      <input type="file" id="video-input" accept="video/*" required>
+      <button type="submit" id="upload-button">Upload</button>
+    </form>
+    <div id="response-container"></div>
+
+    <script>
+      const form = document.querySelector('form');
+      const input = document.querySelector('#video-input');
+      const button = document.querySelector('#upload-button');
+      const responseContainer = document.querySelector('#response-container');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        // Create a FormData object to send the file and metadata
+        const formData = new FormData();
+        formData.append('video', input.files[0]);
+        formData.append('name', 'thoughts');
+
+        // Disable the upload button while the file is being uploaded
+        button.disabled = true;
+
+        // Display a loading bar or progress indicator
+        const progress = document.createElement('progress');
+        progress.max = 100;
+        responseContainer.appendChild(progress);
+
+        // Send the form data to the server using the Fetch API
+        fetch('http://veestream.tech/video/upload', {
+          method: 'POST',
+          headers: {
+            'apiKey': '59959534HX078772Rae8569f7c8bc5fafb6d7e0286b396bcc83551de4',
+          },
+          body: formData,
+        })
+          .then((response) => {
+            // Remove the loading bar or progress indicator
+            progress.remove();
+
+            // Re-enable the upload button
+            button.disabled = false;
+
+            // Check if the response was successful
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+
+            // Parse the JSON response and display it in the response container
+            return response.json();
+          })
+          .then((data) => {
+            responseContainer.textContent = JSON.stringify(data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            responseContainer.textContent = 'An error occurred: ' + error.message;
+          });
+      });
+    </script>
+  </body>
+</html>
